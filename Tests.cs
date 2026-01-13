@@ -2,25 +2,15 @@
 
 public class Tests
 {
-    public record IgnoreMe(string Message);
-    
-    public record TypeOne(IgnoreMe IgnoreOne, IgnoreMe IgnoreTwo);
-    public record TypeTwo((IgnoreMe, IgnoreMe) Ignores);
-    
-    [Test]
-    public async Task Works()
-    {
-        var actual = new TypeOne(new IgnoreMe("foobar"), new IgnoreMe("foobar"));
-        var expected = new TypeOne(new IgnoreMe("baz"), new IgnoreMe("baz"));
-        
-        await Assert.That(actual).IsEquivalentTo(expected).IgnoringType<IgnoreMe>();
-    }
+    public record Thing(string Name, int[] Numbers);
+  
     [Test]
     public async Task Fails()
     {
-        var actual = new TypeTwo((new IgnoreMe("foobar"), new IgnoreMe("foobar")));
-        var expected = new TypeTwo((new IgnoreMe("baz"), new IgnoreMe("baz")));
+        var foo = new Thing("Foo", [1,2,3]);
+        var bar = new Thing("Foo", [1,2,3]);
         
-        await Assert.That(actual).IsEquivalentTo(expected).IgnoringType<IgnoreMe>();
+        await Assert.That(foo).IsEquivalentTo(bar);
+        await Assert.That((foo, bar)).IsEquivalentTo((bar, foo));
     }
 }
